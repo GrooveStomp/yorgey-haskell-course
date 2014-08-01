@@ -45,11 +45,11 @@ construct a (Node _ Leaf        root Leaf        ) = Node 1 (Node 0 Leaf a Leaf)
 construct a (Node c left@Node{} root Leaf        ) = Node c left                 root (Node 0 Leaf a Leaf)
 construct a (Node c Leaf        root right@Node{}) = Node c (Node 0 Leaf a Leaf) root right
 
-construct a (Node c left@(Node leftCount ll lt lr) root right@(Node rightCount rl rt rr))
+construct a (Node c left@(Node leftCount _ _ _) root right@(Node rightCount _ _ _))
   | freeSpace left         = Node c     (construct a left) root right
   | freeSpace right        = Node c     left               root (construct a right)
-  | leftCount < rightCount = Node c     (construct a (Node (leftCount+1) ll lt lr)) root right
-  | leftCount > rightCount = Node c     left               root (construct a (Node (rightCount+1) rl rt rr))
+  | leftCount < rightCount = Node c     (construct a left) root right
+  | leftCount > rightCount = Node c     left               root (construct a right)
   | otherwise              = Node (c+1) (construct a left) root right
 
 freeSpace :: Tree a -> Bool
